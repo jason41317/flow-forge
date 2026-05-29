@@ -53,7 +53,7 @@ class CreateLeadAction
             ]);
         }
 
-        event(new LeadCreated($lead));
+        // event(new LeadCreated($lead));
 
         return $lead;
     }

@@ -31,7 +31,7 @@ class StoreLeadRequest extends FormRequest
 
             // classification
             'source' => ['nullable', 'string', 'max:255'],
-            'type' => ['required', 'string', 'mamx:255'],
+            'type' => ['required', 'string', 'max:255'],
 
             // UTM tracking
             'utm_source' => ['nullable', 'string', 'max:255'],

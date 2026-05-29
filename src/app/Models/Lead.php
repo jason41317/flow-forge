@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\TenantScope;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Lead extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'tenant_id',
         'first_name',
@@ -13,7 +17,6 @@ class Lead extends Model
         'email',
         'phone',
         'source',
-        'status',
         'type',
         'utm_source',
         'utm_medium',
@@ -24,11 +27,7 @@ class Lead extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope('tenant', function ($query) {
-            if ($tenant = app('tenant')) {
-                $query->where('tenant_id', $tenant->id);
-            }
-        });
+        static::addGlobalScope(new TenantScope);
     }
 
     public function fieldValues()

@@ -16,20 +16,21 @@ class IdentifyTenant
      */
     public function handle($request, Closure $next)
     {
-        $slug = $request->header('X-Tenant');
+        $user = $request->user();
 
-        if (! $slug) {
-            abort(403, 'Tenant missing');
+        if (!$user) {
+            abort(401);
         }
 
-        $tenant = Tenant::where('slug', $slug)->first();
+        $tenant = Tenant::find($user->tenant_id);
 
-        if (! $tenant) {
-            abort(403, 'Invalid tenant');
+        if (!$tenant) {
+            abort(403, 'Tenant not found');
         }
 
         app()->instance('tenant', $tenant);
 
         return $next($request);
     }
+
 }

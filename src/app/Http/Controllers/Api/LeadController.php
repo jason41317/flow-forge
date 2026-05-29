@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\CreateLeadAction;
 use App\DTOs\LeadData;
+use App\Filters\LeadFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLeadRequest;
 use App\Models\Lead;
+use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
-    public function index()
+    public function index(Request $request, LeadFilter $filter)
     {
-        return Lead::latest()->paginate(10);
+        $query = Lead::query();
+
+        $query = $filter->apply($query, $request);
+
+        return $query->paginate(10);
     }
 
     public function store(StoreLeadRequest $request)
