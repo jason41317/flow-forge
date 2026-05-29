@@ -41,7 +41,7 @@ class LeadController extends Controller
         $lead = CreateLeadAction::run($dto);
 
         return response()->json([
-            'data' => $lead
+            'data' => $lead,
         ], 201);
     }
 
@@ -56,7 +56,7 @@ class LeadController extends Controller
     public function show(Lead $lead)
     {
         return response()->json([
-            'data' => $lead
+            'data' => $lead,
         ]);
     }
 }

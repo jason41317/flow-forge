@@ -31,7 +31,6 @@ class Lead extends Model
         });
     }
 
-
     public function fieldValues()
     {
         return $this->hasMany(LeadFieldValue::class);

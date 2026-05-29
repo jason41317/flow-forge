@@ -41,7 +41,9 @@ class CreateLeadAction
                 ->where('key', $key)
                 ->first();
 
-            if (!$field) continue;
+            if (! $field) {
+                continue;
+            }
 
             LeadFieldValue::create([
                 'tenant_id' => $data->tenantId,

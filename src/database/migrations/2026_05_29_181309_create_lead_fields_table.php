@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
 
             $table->string('name');
-            $table->string('key'); 
-            $table->string('type')->default('text'); 
+            $table->string('key');
+            $table->string('type')->default('text');
 
             $table->boolean('is_required')->default(false);
 

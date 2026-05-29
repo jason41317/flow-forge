@@ -13,5 +13,4 @@ class LeadField extends Model
         'type',
         'is_required',
     ];
-
 }
