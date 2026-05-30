@@ -3,18 +3,13 @@
 namespace App\Filters;
 
 use App\Filters\LeadFilters\CustomFieldFilter;
-use App\Filters\LeadFilters\SearchFilter;
 use App\Filters\LeadFilters\SortFilter;
-use App\Filters\LeadFilters\SourceFilter;
-use App\Filters\LeadFilters\TypeFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 
 class LeadFilter
 {
-     public function apply(Builder $query, Request $request): Builder
+    public function apply(Builder $query, Request $request): Builder
     {
         // 1. MAIN FIELD OPERATORS
         if ($request->filled('filters')) {

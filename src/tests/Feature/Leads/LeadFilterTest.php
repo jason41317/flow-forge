@@ -5,7 +5,6 @@ namespace Tests\Feature\Leads;
 use App\Models\Lead;
 use App\Models\LeadField;
 use App\Models\LeadFieldValue;
-use App\Support\Tenant\TenantManager;
 use Illuminate\Support\Facades\Log;
 
 it('filters leads using eq operator', function () {
@@ -13,7 +12,7 @@ it('filters leads using eq operator', function () {
     $this->actingAsAdmin();
 
     Lead::factory()->create([
-        'first_name' => 'John'
+        'first_name' => 'John',
     ]);
     Lead::factory()->create(['first_name' => 'Jane']);
 
@@ -134,15 +133,14 @@ it('filters leads using custom fields', function () {
 
     $leadField = LeadField::factory()
         ->create([
-            'key' => 'budget'
+            'key' => 'budget',
         ]);
 
     LeadFieldValue::factory()
         ->create([
             'lead_id' => $lead->id,
-            'lead_field_id' => $leadField->id
+            'lead_field_id' => $leadField->id,
         ]);
-
 
     // assume field + value already exist in DB
     // budget = 5000

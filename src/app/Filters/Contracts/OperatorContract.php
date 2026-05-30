@@ -11,5 +11,4 @@ interface OperatorContract
         string $field,
         mixed $value
     ): Builder;
-
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLeadRequest;
 use App\Http\Resources\LeadResource;
 use App\Models\Lead;
+use App\Support\Api\ApiResponse;
 use App\Support\Tenant\TenantManager;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -25,8 +26,9 @@ class LeadController extends Controller
 
         $query = $filter->apply($query, $request);
 
-        return LeadResource::collection(
-            $query->paginate(10)
+        return ApiResponse::success(
+            LeadResource::collection($query->paginate(10)),
+            'Leads fetched'
         );
     }
 
@@ -57,9 +59,11 @@ class LeadController extends Controller
 
         $lead = CreateLeadAction::run($dto);
 
-        return response()->json([
-            'data' => new LeadResource($lead),
-        ], 201);
+        return ApiResponse::success(
+            new LeadResource($lead),
+            'Lead created',
+            201
+        );
     }
 
     private function sanitizeCustomFields(array $fields): array

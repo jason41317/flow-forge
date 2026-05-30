@@ -3,7 +3,6 @@
 namespace App\Filters\LeadFilters;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class SortFilter
 {
@@ -24,7 +23,7 @@ class SortFilter
             'first_name',
             'email',
             'updated_at',
-            'id'
+            'id',
         ];
 
         if (! in_array($column, $allowed)) {

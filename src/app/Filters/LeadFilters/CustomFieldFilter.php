@@ -4,7 +4,6 @@ namespace App\Filters\LeadFilters;
 
 use App\Filters\OperatorResolver;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CustomFieldFilter
@@ -29,7 +28,7 @@ class CustomFieldFilter
                 //     ->apply(
                 //         $query,
                 //         $fieldKey,
-                        
+
                 //     );
             }
         }

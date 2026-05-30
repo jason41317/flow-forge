@@ -23,6 +23,7 @@ class LogLeadCreated
         Log::info('Lead created', [
             'lead_id' => $event->lead->id,
             'tenant_id' => $event->lead->tenant_id,
+            'email' => $event->lead->email,
         ]);
     }
 }

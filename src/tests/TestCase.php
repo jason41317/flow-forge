@@ -5,7 +5,6 @@ namespace Tests;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Support\Facades\Log;
 
 abstract class TestCase extends BaseTestCase
 {

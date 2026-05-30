@@ -38,7 +38,7 @@ class LeadResource extends JsonResource
             ->load('field')
             ->mapWithKeys(function ($value) {
                 return [
-                    $value->field->key => $value->value
+                    $value->field->key => $value->value,
                 ];
             })
             ->toArray();

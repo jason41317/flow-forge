@@ -3,8 +3,8 @@
 namespace Tests\Feature\Tenant;
 
 use App\Models\Lead;
-use App\Models\User;
 use App\Models\Tenant;
+use App\Models\User;
 
 it('prevents cross tenant access', function () {
 

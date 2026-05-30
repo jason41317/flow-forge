@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Leads;
 
-use App\Models\Lead;
-
 it('stores a lead', function () {
 
     $this->actingAsAdmin();
