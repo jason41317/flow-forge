@@ -18,9 +18,9 @@ class LoginAction
 
     public static function run(LoginData $data): array
     {
-        if (!Auth::attempt([
+        if (! Auth::attempt([
             'email' => $data->email,
-            'password' => $data->password
+            'password' => $data->password,
         ])) {
             abort(401, 'Invalid credentials');
         }
@@ -34,5 +34,4 @@ class LoginAction
             'token' => $token,
         ];
     }
-
 }

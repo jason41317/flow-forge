@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LeadFieldValue;
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,8 @@ class LeadFieldValueFactory extends Factory
     public function definition(): array
     {
         return [
-            'value' => Str::random(5)
+            'tenant_id' => fn () => auth()->user()?->tenant_id ?? Tenant::factory(),
+            'value' => Str::random(5),
         ];
     }
 }

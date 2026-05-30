@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('utm_content')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

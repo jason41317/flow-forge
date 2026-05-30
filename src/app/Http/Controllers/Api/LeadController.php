@@ -7,23 +7,34 @@ use App\DTOs\LeadData;
 use App\Filters\LeadFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLeadRequest;
+use App\Http\Resources\LeadResource;
 use App\Models\Lead;
+use App\Support\Tenant\TenantManager;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request, LeadFilter $filter)
     {
+        $this->authorize('viewAny', Lead::class);
+
         $query = Lead::query();
 
         $query = $filter->apply($query, $request);
 
-        return $query->paginate(10);
+        return LeadResource::collection(
+            $query->paginate(10)
+        );
     }
 
     public function store(StoreLeadRequest $request)
     {
-        $tenant = app('tenant');
+        $this->authorize('create', Lead::class);
+
+        $tenant = app(TenantManager::class)->get();
 
         $dto = new LeadData(
             firstName: $request->first_name,
@@ -47,7 +58,7 @@ class LeadController extends Controller
         $lead = CreateLeadAction::run($dto);
 
         return response()->json([
-            'data' => $lead,
+            'data' => new LeadResource($lead),
         ], 201);
     }
 

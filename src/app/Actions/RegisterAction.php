@@ -19,10 +19,10 @@ class RegisterAction
     }
 
     public static function run(RegisterData $data): User
-    {   
+    {
         $tenant = Tenant::create([
             'name' => $data->tenantName,
-            'slug' => Str::slug($data->tenantName) . '-' . rand(1000,9999),
+            'slug' => Str::slug($data->tenantName).'-'.rand(1000, 9999),
         ]);
 
         $user = User::create([
@@ -34,5 +34,4 @@ class RegisterAction
 
         return $user;
     }
-
 }

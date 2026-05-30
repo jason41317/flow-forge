@@ -5,34 +5,20 @@ namespace Tests;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Log;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
-
-    protected function createTenant(): Tenant
+    protected function actingAsAdmin(array $overrides = [])
     {
-        return Tenant::factory()->create();
-    }
+        $tenant = Tenant::factory()->create();
 
-    protected function createUser(Tenant $tenant): User
-    {
-        return User::factory()->create([
-            'tenant_id' => $tenant->id,
-        ]);
-    }
+        $user = User::factory()
+            ->admin()
+            ->create(array_merge([
+                'tenant_id' => $tenant->id,
+            ], $overrides));
 
-    protected function actingAsTenantUser(Tenant $tenant): User
-    {
-        return $this->createUser($tenant);
-    }
-
-    protected function asTenant(User $user, Tenant $tenant)
-    {
-        return $this
-            ->actingAs($user, 'sanctum')
-            ->withHeaders([
-                'X-Tenant' => $tenant->slug,
-            ]);
+        return $this->actingAs($user);
     }
 }

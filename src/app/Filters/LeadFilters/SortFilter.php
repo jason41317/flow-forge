@@ -2,23 +2,16 @@
 
 namespace App\Filters\LeadFilters;
 
-use App\Contracts\Contracts\FilterContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class SortFilter implements FilterContract
+class SortFilter
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
+    public function apply(Builder $query, string $sort): Builder
     {
-        //
-    }
-
-    public function apply(Builder $query, Request $request, string $key): Builder
-    {
-        $sort = $request->$key;
+        if (! $sort) {
+            return $query;
+        }
 
         $direction = str_starts_with($sort, '-')
             ? 'desc'
@@ -26,16 +19,18 @@ class SortFilter implements FilterContract
 
         $column = ltrim($sort, '-');
 
-        $allowedSorts = [
+        $allowed = [
             'created_at',
             'first_name',
             'email',
+            'updated_at',
+            'id'
         ];
 
-        if (in_array($column, $allowedSorts)) {
-            return $query->orderBy($column, $direction);
+        if (! in_array($column, $allowed)) {
+            return $query;
         }
 
-        return $query;
+        return $query->orderBy($column, $direction);
     }
 }

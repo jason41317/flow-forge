@@ -2,37 +2,68 @@
 
 namespace App\Filters\LeadFilters;
 
-use App\Contracts\Contracts\FilterContract;
+use App\Filters\OperatorResolver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-class CustomFieldFilter implements FilterContract
+class CustomFieldFilter
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        
-    }
+    public function apply(
+        Builder $query,
+        array $fields
+    ): Builder {
 
-    public function apply(Builder $query, Request $request, string $key): Builder
-    {
-        foreach ($request->custom_fields as $fieldKey => $value) {
+        if (! $fields) {
+            return $query;
+        }
 
-            $query->whereHas('fieldValues', function ($q) use ($fieldKey, $value) {
-
-                $q->where('value', $value)
-                    ->whereHas('field', function ($fieldQuery) use ($fieldKey) {
-
-                        $fieldQuery->where('key', $fieldKey);
-
-                    });
-
-            });
+        foreach ($fields as $fieldKey => $operators) {
+            // Log::info($request->custom_fields);
+            // Log::info($fieldKey);
+            // Log::info($operators);
+            foreach ($operators as $operator => $value) {
+                $this->applyCustomFieldScope($query, $fieldKey, $operator, $value);
+                // app(OperatorResolver::class)
+                //     ->resolve($operator)
+                //     ->apply(
+                //         $query,
+                //         $fieldKey,
+                        
+                //     );
+            }
         }
 
         return $query;
+    }
 
+    private function applyCustomFieldScope(Builder $query, string $fieldKey, string $operator, mixed $value)
+    {
+        return $query->whereHas('fieldValues', function ($sub) use ($fieldKey, $value, $operator) {
+
+            $sub->whereHas('field', function ($f) use ($fieldKey) {
+                $f->where('key', $fieldKey);
+            });
+
+            // match ($operator) {
+            //     'eq' => $sub->where('value', $value),
+            //     'contains' => $sub->where('value', 'like', "%{$value}%"),
+            //     'gt' => $sub->where('value', '>', $value),
+            //     'lt' => $sub->where('value', '<', $value),
+            //     'between' => $sub->whereBetween('value', $value),
+            // };
+
+            $resolvedOperator = app(
+                OperatorResolver::class
+            )->resolve($operator);
+
+            if ($resolvedOperator) {
+                $resolvedOperator->apply(
+                    $sub,
+                    'value',
+                    $value
+                );
+            }
+        });
     }
 }

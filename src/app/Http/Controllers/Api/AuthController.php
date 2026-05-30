@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\LoginAction;
 use App\Actions\RegisterAction;
-use App\Http\Controllers\Controller;
 use App\DTOs\LoginData;
 use App\DTOs\RegisterData;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 
@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Registered successfully',
-            'user' => $user
+            'user' => $user,
         ]);
     }
 

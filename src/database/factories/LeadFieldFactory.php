@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LeadField;
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,9 +20,10 @@ class LeadFieldFactory extends Factory
     public function definition(): array
     {
         return [
+            'tenant_id' => fn () => auth()->user()?->tenant_id ?? Tenant::factory(),
             'name' => Str::random(5),
             'key' => Str::random(5),
-            'type' => 'text'
+            'type' => 'text',
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\LeadCreated;
 use App\Listeners\LogLeadCreated;
+use App\Support\Tenant\TenantManager;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(TenantManager::class);
     }
 
     /**
