@@ -8,16 +8,14 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function actingAsAdmin(array $overrides = [])
+    protected function createTenantAdmin()
     {
         $tenant = Tenant::factory()->create();
 
-        $user = User::factory()
+        return User::factory()
             ->admin()
-            ->create(array_merge([
+            ->create([
                 'tenant_id' => $tenant->id,
-            ], $overrides));
-
-        return $this->actingAs($user);
+            ]);
     }
 }

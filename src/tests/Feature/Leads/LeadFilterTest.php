@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Log;
 
 it('filters leads using eq operator', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
+
+    $this->actingAs($user);
 
     Lead::factory()->create([
+        'tenant_id' => $user->tenant_id,
         'first_name' => 'John',
     ]);
     Lead::factory()->create(['first_name' => 'Jane']);
@@ -29,9 +32,12 @@ it('filters leads using eq operator', function () {
 
 it('filters leads using contains operator', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
+
+    $this->actingAs($user);
 
     Lead::factory()->create([
+        'tenant_id' => $user->tenant_id,
         'email' => 'john@test.com',
     ]);
 
@@ -48,7 +54,9 @@ it('filters leads using contains operator', function () {
 
 it('filters leads using gt operator', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
+
+    $this->actingAs($user);
 
     Lead::factory()->create(['id' => 1]);
     Lead::factory()->create(['id' => 10]);
@@ -58,31 +66,35 @@ it('filters leads using gt operator', function () {
     $response->assertOk();
 
     expect($response->json('data'))
-        ->each(fn ($lead) => expect($lead->value['id'])->toBeGreaterThan(5));
+        ->each(fn($lead) => expect($lead->value['id'])->toBeGreaterThan(5));
 });
 
 it('filters leads using lt operator', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
 
-    Lead::factory()->create(['id' => 1]);
-    Lead::factory()->create(['id' => 10]);
+    $this->actingAs($user);
+
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 1]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 10]);
 
     $response = $this->getJson('/api/v1/leads?filters[id][lt]=5');
 
     $response->assertOk();
 
     expect($response->json('data'))
-        ->each(fn ($lead) => expect($lead->value['id'])->toBeLessThan(5));
+        ->each(fn($lead) => expect($lead->value['id'])->toBeLessThan(5));
 });
 
 it('filters leads using between operator', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
 
-    Lead::factory()->create(['id' => 1]);
-    Lead::factory()->create(['id' => 5]);
-    Lead::factory()->create(['id' => 10]);
+    $this->actingAs($user);
+
+    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 1]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 5]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 10]);
 
     $response = $this->getJson(
         '/api/v1/leads?filters[id][between]=[2,8]'
@@ -95,10 +107,12 @@ it('filters leads using between operator', function () {
 
 it('sorts leads ascending', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
 
-    Lead::factory()->create(['id' => 10]);
-    Lead::factory()->create(['id' => 1]);
+    $this->actingAs($user);
+
+    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 10]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 1]);
 
     $response = $this->getJson('/api/v1/leads?sort=id');
 
@@ -111,10 +125,12 @@ it('sorts leads ascending', function () {
 
 it('sorts leads descending', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
 
-    Lead::factory()->create(['id' => 10]);
-    Lead::factory()->create(['id' => 1]);
+    $this->actingAs($user);
+
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 10]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 1]);
 
     $response = $this->getJson('/api/v1/leads?sort=-id');
 
@@ -127,13 +143,16 @@ it('sorts leads descending', function () {
 
 it('filters leads using custom fields', function () {
 
-    $this->actingAsAdmin();
+    $user = $this->createTenantAdmin();
 
-    $lead = Lead::factory()->create();
+    $this->actingAs($user);
+
+    $lead = Lead::factory()->create(['tenant_id' => $user->tenant_id,]);
 
     $leadField = LeadField::factory()
         ->create([
             'key' => 'budget',
+            'tenant_id' => $user->tenant_id,
         ]);
 
     LeadFieldValue::factory()

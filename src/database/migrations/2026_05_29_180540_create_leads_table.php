@@ -27,6 +27,8 @@ return new class extends Migration
             // Lead type classification
             $table->string('type')->default('manual');
 
+            $table->foreignId('lead_status_id')->nullable()->constrained()->cascadeOnDelete();
+
             // UTM tracking fields
             $table->string('utm_source')->nullable();
             $table->string('utm_medium')->nullable();

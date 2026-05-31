@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\CreateLeadAction;
+use App\Actions\UpdateLeadAction;
 use App\DTOs\LeadData;
 use App\Filters\LeadFilter;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\Support\Api\ApiResponse;
 use App\Support\Tenant\TenantManager;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class LeadController extends Controller
 {
@@ -20,7 +22,7 @@ class LeadController extends Controller
 
     public function index(Request $request, LeadFilter $filter)
     {
-        $this->authorize('viewAny', Lead::class);
+        Gate::authorize('viewAny', Lead::class);
 
         $query = Lead::query();
 
@@ -34,7 +36,7 @@ class LeadController extends Controller
 
     public function store(StoreLeadRequest $request)
     {
-        $this->authorize('create', Lead::class);
+        Gate::authorize('create', Lead::class);
 
         $tenant = app(TenantManager::class)->get();
 
@@ -66,6 +68,40 @@ class LeadController extends Controller
         );
     }
 
+    public function update(Lead $lead, StoreLeadRequest $request)
+    {
+        Gate::authorize('update', $lead);
+
+        $tenant = app(TenantManager::class)->get();
+
+        $dto = new LeadData(
+            firstName: $request->first_name,
+            lastName: $request->last_name,
+            email: $request->email,
+            phone: $request->phone,
+            source: $request->source,
+            type: $request->type,
+
+            utmSource: $request->utm_source,
+            utmMedium: $request->utm_medium,
+            utmCampaign: $request->utm_campaign,
+            utmTerm: $request->utm_term,
+            utmContent: $request->utm_content,
+
+            customFields: $this->sanitizeCustomFields($request->custom_fields ?? []),
+
+            tenantId: $tenant->id
+        );
+
+        $lead = UpdateLeadAction::run($lead, $dto);
+
+        return ApiResponse::success(
+            new LeadResource($lead),
+            'Lead updated',
+            200
+        );
+    }
+
     private function sanitizeCustomFields(array $fields): array
     {
         // remove dangerous keys or invalid structures
@@ -76,6 +112,7 @@ class LeadController extends Controller
 
     public function show(Lead $lead)
     {
+        Gate::authorize('view', $lead);
         return response()->json([
             'data' => $lead,
         ]);

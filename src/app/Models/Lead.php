@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'tenant_id',
@@ -18,6 +19,7 @@ class Lead extends Model
         'phone',
         'source',
         'type',
+        'lead_status_id',
         'utm_source',
         'utm_medium',
         'utm_campaign',
@@ -34,4 +36,9 @@ class Lead extends Model
     {
         return $this->hasMany(LeadFieldValue::class);
     }
+
+    public function status()
+    {
+        return $this->belongsTo(LeadStatus::class);
+    }   
 }

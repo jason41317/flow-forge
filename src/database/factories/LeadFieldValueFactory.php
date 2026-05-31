@@ -20,7 +20,7 @@ class LeadFieldValueFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => fn () => auth()->user()?->tenant_id ?? Tenant::factory(),
+            'tenant_id' => Tenant::factory(),
             'value' => Str::random(5),
         ];
     }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Filters;
+namespace App\Filters\Schemas;
 
-class LeadFilterSchema
+use App\Filters\Contracts\SchemaContract;
+
+class LeadFilterSchema implements SchemaContract
 {
     public static function fields(): array
     {

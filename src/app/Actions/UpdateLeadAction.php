@@ -3,36 +3,33 @@
 namespace App\Actions;
 
 use App\DTOs\LeadData;
-use App\Events\LeadCreated;
+use App\Events\LeadUpdated;
 use App\Models\Lead;
 use App\Models\LeadField;
 use App\Models\LeadFieldValue;
 
-class CreateLeadAction
+class UpdateLeadAction
 {
     /**
      * Create a new class instance.
      */
-    public static function run(LeadData $data)
+    public function __construct()
     {
-        $lead = Lead::create([
-            'tenant_id' => $data->tenantId,
+        //
+    }
 
+    public static function run(Lead $lead, LeadData $data)
+    {
+        $oldValues = $lead->getOriginal();
+        
+        $lead->update([
             'first_name' => $data->firstName,
             'last_name' => $data->lastName,
             'email' => $data->email,
             'phone' => $data->phone,
 
             'source' => $data->source,
-            'type' => $data->type,
-
-            'utm_source' => $data->utmSource,
-            'utm_medium' => $data->utmMedium,
-            'utm_campaign' => $data->utmCampaign,
-            'utm_term' => $data->utmTerm,
-            'utm_content' => $data->utmContent,
-
-            'status' => 'new',
+            'type' => $data->type
         ]);
 
         // dynamic fields (unchanged)
@@ -53,7 +50,10 @@ class CreateLeadAction
             ]);
         }
 
-        event(new LeadCreated($lead));
+        event(new LeadUpdated(
+            $lead->fresh(),
+            $oldValues
+        ));
 
         return $lead;
     }

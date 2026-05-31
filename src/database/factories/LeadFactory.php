@@ -19,7 +19,7 @@ class LeadFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => fn () => auth()->user()?->tenant_id ?? Tenant::factory(),
+            'tenant_id' => Tenant::factory(),
 
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
@@ -37,7 +37,7 @@ class LeadFactory extends Factory
         ];
     }
 
-    public function forTenant($tenantId): static
+    public function forTenant(mixed $tenantId): static
     {
         return $this->state(fn () => [
             'tenant_id' => $tenantId,

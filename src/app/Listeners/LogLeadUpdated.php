@@ -3,10 +3,11 @@
 namespace App\Listeners;
 
 use App\Actions\CreateAuditLogAction;
-use App\Events\LeadCreated;
-use Illuminate\Support\Facades\Log;
+use App\Events\LeadUpdated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
-class LogLeadCreated
+class LogLeadUpdated
 {
     /**
      * Create the event listener.
@@ -19,15 +20,15 @@ class LogLeadCreated
     /**
      * Handle the event.
      */
-    public function handle(LeadCreated $event): void
+    public function handle(LeadUpdated $event): void
     {
         CreateAuditLogAction::run(
             tenantId: $event->lead->tenant_id,
             userId: auth()->id(),
-            event: 'created',
+            event: 'updated',
             entityType: 'lead',
             entityId: $event->lead->id,
-            oldValues: null,
+            oldValues: $event->oldValues,
             newValues: $event->lead->toArray(),
         );
     }

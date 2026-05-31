@@ -25,12 +25,15 @@ class OperatorEngine
     ];
 
     public function __construct(
-        protected OperatorResolver $resolver
+        protected OperatorResolver $operatorResolver,
+        protected SchemaResolver $schemaResolver
     ) {}
 
     public function apply(Builder $query, array $filters): Builder
     {
-        $schema = LeadFilterSchema::fields();
+        $schema = $this->schemaResolver
+            ->resolve(get_class($query->getModel()))
+            ->fields();
 
         foreach ($filters as $field => $operators) {
 
@@ -51,7 +54,7 @@ class OperatorEngine
 
                 // Log::info('Value after cast - ' . $value);
 
-                $this->resolver
+                $this->operatorResolver
                     ->resolve($operator)
                     ->apply($query, $field, $value);
             }
