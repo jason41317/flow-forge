@@ -17,7 +17,7 @@ class CreateLeadStatusAction
             'name' => $data->name,
             'color' => $data->color,
             'is_default' => $data->isDefault,
-            'is_closed' => $data->isClosed
+            'is_closed' => $data->isClosed,
         ]);
 
         // event

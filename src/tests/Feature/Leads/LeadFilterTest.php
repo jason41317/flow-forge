@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Feature\Leads;
-
 use App\Models\Lead;
 use App\Models\LeadField;
 use App\Models\LeadFieldValue;
@@ -66,7 +64,7 @@ it('filters leads using gt operator', function () {
     $response->assertOk();
 
     expect($response->json('data'))
-        ->each(fn($lead) => expect($lead->value['id'])->toBeGreaterThan(5));
+        ->each(fn ($lead) => expect($lead->value['id'])->toBeGreaterThan(5));
 });
 
 it('filters leads using lt operator', function () {
@@ -83,7 +81,7 @@ it('filters leads using lt operator', function () {
     $response->assertOk();
 
     expect($response->json('data'))
-        ->each(fn($lead) => expect($lead->value['id'])->toBeLessThan(5));
+        ->each(fn ($lead) => expect($lead->value['id'])->toBeLessThan(5));
 });
 
 it('filters leads using between operator', function () {
@@ -92,9 +90,9 @@ it('filters leads using between operator', function () {
 
     $this->actingAs($user);
 
-    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 1]);
-    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 5]);
-    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 10]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 1]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 5]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 10]);
 
     $response = $this->getJson(
         '/api/v1/leads?filters[id][between]=[2,8]'
@@ -111,8 +109,8 @@ it('sorts leads ascending', function () {
 
     $this->actingAs($user);
 
-    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 10]);
-    Lead::factory()->create(['tenant_id' => $user->tenant_id,'id' => 1]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 10]);
+    Lead::factory()->create(['tenant_id' => $user->tenant_id, 'id' => 1]);
 
     $response = $this->getJson('/api/v1/leads?sort=id');
 
@@ -147,7 +145,7 @@ it('filters leads using custom fields', function () {
 
     $this->actingAs($user);
 
-    $lead = Lead::factory()->create(['tenant_id' => $user->tenant_id,]);
+    $lead = Lead::factory()->create(['tenant_id' => $user->tenant_id]);
 
     $leadField = LeadField::factory()
         ->create([

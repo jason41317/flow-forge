@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Actions\CreateAuditLogAction;
 use App\Events\LeadCreated;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class LogLeadCreated
 {
@@ -23,7 +23,7 @@ class LogLeadCreated
     {
         CreateAuditLogAction::run(
             tenantId: $event->lead->tenant_id,
-            userId: auth()->id(),
+            userId: Auth::id(),
             event: 'created',
             entityType: 'lead',
             entityId: $event->lead->id,

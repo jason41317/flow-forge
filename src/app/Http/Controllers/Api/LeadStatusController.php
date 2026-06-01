@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Gate;
 class LeadStatusController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -71,6 +72,7 @@ class LeadStatusController extends Controller
     {
         $leadStatus = LeadStatus::findOrFail($id);
         Gate::authorize('view', $leadStatus);
+
         return response()->json([
             'data' => $leadStatus,
         ]);

@@ -4,8 +4,7 @@ namespace App\Listeners;
 
 use App\Actions\CreateAuditLogAction;
 use App\Events\LeadUpdated;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
 
 class LogLeadUpdated
 {
@@ -24,7 +23,7 @@ class LogLeadUpdated
     {
         CreateAuditLogAction::run(
             tenantId: $event->lead->tenant_id,
-            userId: auth()->id(),
+            userId: Auth::id(),
             event: 'updated',
             entityType: 'lead',
             entityId: $event->lead->id,

@@ -9,7 +9,7 @@ use App\Models\LeadStatus;
 
 class SchemaResolver
 {
-   public function resolve(string $modelClass)
+    public function resolve(string $modelClass)
     {
         return match ($modelClass) {
             Lead::class => app(LeadFilterSchema::class),

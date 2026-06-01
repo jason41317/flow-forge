@@ -6,7 +6,7 @@ use App\Filters\Contracts\SchemaContract;
 
 class LeadStatusFilterSchema implements SchemaContract
 {
-     public static function fields(): array
+    public static function fields(): array
     {
         return [
             'id' => [

@@ -18,13 +18,13 @@ Route::prefix('v1')
         Route::middleware(['auth:sanctum', 'tenant'])->group(function () {
             Route::get('/me', fn () => request()->user());
 
-            //Leads
+            // Leads
             Route::get('/leads', [LeadController::class, 'index']);
             Route::post('/leads', [LeadController::class, 'store']);
             Route::put('/leads/{lead}', [LeadController::class, 'update']);
             Route::get('/leads/{lead}', [LeadController::class, 'show']);
 
-            //Lead Status
+            // Lead Status
             Route::get('/lead-statuses', [LeadStatusController::class, 'index']);
             Route::post('/lead-statuses', [LeadStatusController::class, 'store']);
             Route::put('/lead-statuses/{id}', [LeadStatusController::class, 'update']);

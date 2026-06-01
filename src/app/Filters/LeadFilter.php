@@ -4,7 +4,6 @@ namespace App\Filters;
 
 use App\Filters\LeadFilters\CustomFieldFilter;
 use App\Filters\LeadFilters\SortFilter;
-use App\Filters\OperatorEngine;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 

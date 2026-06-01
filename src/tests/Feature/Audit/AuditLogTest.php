@@ -30,7 +30,7 @@ it('creates an audit log when a lead is updated', function () {
 
     $lead = Lead::factory()->create();
 
-    $this->putJson('/api/v1/leads/' . $lead->id, [
+    $this->putJson('/api/v1/leads/'.$lead->id, [
         'first_name' => 'John',
         'last_name' => 'Doe',
         'email' => 'john@test.com',

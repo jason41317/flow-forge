@@ -8,7 +8,7 @@ it('lists tenant status', function () {
     $this->actingAs($user);
 
     LeadStatus::factory()->count(3)->create([
-        'tenant_id' => $user->tenant_id
+        'tenant_id' => $user->tenant_id,
     ]);
 
     $response = $this->getJson('/api/v1/lead-statuses');

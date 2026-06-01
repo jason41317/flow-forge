@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  * @extends Factory<LeadStatus>
  */
 class LeadStatusFactory extends Factory
-{ 
+{
     protected $model = LeadStatus::class;
 
     /**
@@ -20,7 +20,7 @@ class LeadStatusFactory extends Factory
      */
     public function definition(): array
     {
-         return [
+        return [
             'tenant_id' => Tenant::factory(),
             'name' => fake()->unique()->word(),
             'color' => fake()->hexColor(),

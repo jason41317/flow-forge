@@ -15,7 +15,7 @@ class LeadStatusFilter
                 ->apply($query, $request->filters);
         }
 
-         if ($request->filled('sort')) {
+        if ($request->filled('sort')) {
             app(SortFilter::class)
                 ->apply($query, $request->sort);
         }

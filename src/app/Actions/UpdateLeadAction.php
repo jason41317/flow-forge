@@ -21,7 +21,7 @@ class UpdateLeadAction
     public static function run(Lead $lead, LeadData $data)
     {
         $oldValues = $lead->getOriginal();
-        
+
         $lead->update([
             'first_name' => $data->firstName,
             'last_name' => $data->lastName,
@@ -29,7 +29,7 @@ class UpdateLeadAction
             'phone' => $data->phone,
 
             'source' => $data->source,
-            'type' => $data->type
+            'type' => $data->type,
         ]);
 
         // dynamic fields (unchanged)

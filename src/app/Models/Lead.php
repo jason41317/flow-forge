@@ -40,5 +40,5 @@ class Lead extends Model
     public function status()
     {
         return $this->belongsTo(LeadStatus::class);
-    }   
+    }
 }

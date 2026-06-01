@@ -13,6 +13,6 @@ class DeleteLeadStatusAction
     {
         $leadStatus->delete();
 
-        //events
+        // events
     }
 }

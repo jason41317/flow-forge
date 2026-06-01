@@ -113,6 +113,7 @@ class LeadController extends Controller
     public function show(Lead $lead)
     {
         Gate::authorize('view', $lead);
+
         return response()->json([
             'data' => $lead,
         ]);

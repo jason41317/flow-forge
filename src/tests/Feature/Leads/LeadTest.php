@@ -32,7 +32,7 @@ it('updates a lead', function () {
         'tenant_id' => $user->tenant_id,
     ]);
 
-    $response = $this->putJson('/api/v1/leads/' . $lead->id, [
+    $response = $this->putJson('/api/v1/leads/'.$lead->id, [
         'first_name' => 'John',
         'last_name' => 'Doe',
         'email' => 'john@test.com',
