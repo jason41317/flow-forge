@@ -13,7 +13,6 @@ class CreateLeadStatusAction
     public static function run(LeadStatusData $data)
     {
         $leadStatus = LeadStatus::create([
-            'tenant_id' => $data->tenantId,
             'name' => $data->name,
             'color' => $data->color,
             'is_default' => $data->isDefault,

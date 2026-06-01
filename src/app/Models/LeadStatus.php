@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Auditable;
+use App\BelongsToTenant;
 use App\Models\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,14 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LeadStatus extends Model
 {
-    use HasFactory, SoftDeletes, Auditable;
+    use Auditable, HasFactory, SoftDeletes, BelongsToTenant;
 
     protected $guarded = ['id'];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new TenantScope);
-    }
 
     public function leads()
     {

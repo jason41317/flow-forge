@@ -32,9 +32,8 @@ class UpdateLeadAction
             'type' => $data->type,
         ]);
 
-        // dynamic fields (unchanged)
-        foreach ($data->customFields as $key => $value) {
-            $field = LeadField::where('tenant_id', $data->tenantId)
+         foreach ($data->customFields as $key => $value) {
+            $field = LeadField::where('tenant_id', $lead->tenant_id)
                 ->where('key', $key)
                 ->first();
 
@@ -42,12 +41,12 @@ class UpdateLeadAction
                 continue;
             }
 
-            LeadFieldValue::create([
-                'tenant_id' => $data->tenantId,
-                'lead_id' => $lead->id,
-                'lead_field_id' => $field->id,
-                'value' => $value,
-            ]);
+            $lead->fieldValues()
+                ->where('tenant_id', $lead->tenant_id)
+                ->update([
+                    'lead_field_id' => $field->id,
+                    'value' => $value,
+                ]);
         }
 
         event(new LeadUpdated(

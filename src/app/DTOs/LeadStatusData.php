@@ -12,6 +12,5 @@ class LeadStatusData
         public ?string $color,
         public ?bool $isDefault,
         public ?bool $isClosed,
-        public int $tenantId
     ) {}
 }

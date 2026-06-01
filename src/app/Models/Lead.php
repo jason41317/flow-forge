@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\BelongsToTenant;
 use App\Models\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BelongsToTenant;
 
     protected $fillable = [
         'tenant_id',
@@ -26,11 +27,6 @@ class Lead extends Model
         'utm_term',
         'utm_content',
     ];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new TenantScope);
-    }
 
     public function fieldValues()
     {

@@ -38,8 +38,6 @@ class LeadController extends Controller
     {
         Gate::authorize('create', Lead::class);
 
-        $tenant = app(TenantManager::class)->get();
-
         $dto = new LeadData(
             firstName: $request->first_name,
             lastName: $request->last_name,
@@ -55,8 +53,6 @@ class LeadController extends Controller
             utmContent: $request->utm_content,
 
             customFields: $this->sanitizeCustomFields($request->custom_fields ?? []),
-
-            tenantId: $tenant->id
         );
 
         $lead = CreateLeadAction::run($dto);
@@ -72,8 +68,6 @@ class LeadController extends Controller
     {
         Gate::authorize('update', $lead);
 
-        $tenant = app(TenantManager::class)->get();
-
         $dto = new LeadData(
             firstName: $request->first_name,
             lastName: $request->last_name,
@@ -88,9 +82,7 @@ class LeadController extends Controller
             utmTerm: $request->utm_term,
             utmContent: $request->utm_content,
 
-            customFields: $this->sanitizeCustomFields($request->custom_fields ?? []),
-
-            tenantId: $tenant->id
+            customFields: $this->sanitizeCustomFields($request->custom_fields ?? [])
         );
 
         $lead = UpdateLeadAction::run($lead, $dto);

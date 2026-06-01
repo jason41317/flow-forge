@@ -16,8 +16,6 @@ class CreateLeadAction
     public static function run(LeadData $data)
     {
         $lead = Lead::create([
-            'tenant_id' => $data->tenantId,
-
             'first_name' => $data->firstName,
             'last_name' => $data->lastName,
             'email' => $data->email,
@@ -35,9 +33,9 @@ class CreateLeadAction
             'status' => 'new',
         ]);
 
-        // dynamic fields (unchanged)
+        // dynamic fields
         foreach ($data->customFields as $key => $value) {
-            $field = LeadField::where('tenant_id', $data->tenantId)
+            $field = LeadField::where('tenant_id', $lead->tenant_id)
                 ->where('key', $key)
                 ->first();
 
@@ -45,9 +43,8 @@ class CreateLeadAction
                 continue;
             }
 
-            LeadFieldValue::create([
-                'tenant_id' => $data->tenantId,
-                'lead_id' => $lead->id,
+            $lead->fieldValues()->create([
+                'tenant_id' => $lead->tenant_id,
                 'lead_field_id' => $field->id,
                 'value' => $value,
             ]);

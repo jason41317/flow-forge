@@ -45,15 +45,11 @@ class LeadStatusController extends Controller
     {
         Gate::authorize('create', LeadStatus::class);
 
-        $tenant = app(TenantManager::class)->get();
-
         $dto = new LeadStatusData(
             name: $request->name,
             color: $request->color,
             isDefault: $request->is_default,
             isClosed: $request->is_closed,
-
-            tenantId: $tenant->id
         );
 
         $lead = CreateLeadStatusAction::run($dto);
@@ -86,15 +82,11 @@ class LeadStatusController extends Controller
         $leadStatus = LeadStatus::findOrFail($id);
         Gate::authorize('update', $leadStatus);
 
-        $tenant = app(TenantManager::class)->get();
-
         $dto = new LeadStatusData(
             name: $request->name,
             color: $request->color,
             isDefault: $request->is_default,
             isClosed: $request->is_closed,
-
-            tenantId: $tenant->id
         );
 
         $leadStatus = UpdateLeadStatusAction::run($leadStatus, $dto);

@@ -13,7 +13,6 @@ class UpdateLeadStatusAction
     public static function run(LeadStatus $leadStatus, LeadStatusData $data)
     {
         $leadStatus->update([
-            'tenant_id' => $data->tenantId,
             'name' => $data->name,
             'color' => $data->color,
             'is_default' => $data->isDefault,

@@ -5,7 +5,6 @@ namespace App;
 use App\Actions\CreateAuditLogAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 
 trait Auditable
 {
@@ -20,7 +19,7 @@ trait Auditable
         static::created(function ($model) {
             if (Auth::id()) {
                 Log::info('created: auditable');
-                 CreateAuditLogAction::run(
+                CreateAuditLogAction::run(
                     tenantId: $model->tenant_id,
                     userId: Auth::id(),
                     event: 'created',
@@ -34,7 +33,7 @@ trait Auditable
 
         static::updated(function ($model) {
             // Check if model is auditable and not currently being soft-deleted
-            if (!isset($model->deleted_at) && Auth::id()) {
+            if (! isset($model->deleted_at) && Auth::id()) {
                 CreateAuditLogAction::run(
                     tenantId: $model->tenant_id,
                     userId: Auth::id(),

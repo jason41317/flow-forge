@@ -22,7 +22,6 @@ class LeadData
         public ?string $utmContent,
 
         public array $customFields,
-        public int $tenantId
     ) {}
 
 }
