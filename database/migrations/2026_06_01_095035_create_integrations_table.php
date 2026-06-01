@@ -43,6 +43,7 @@ return new class extends Migration
             $table->boolean('enabled')->default(true);
 
             $table->timestamps();
+            $table->softDeletes();
 
             // prevents duplicate same provider per tenant instance name if needed
             $table->unique(['tenant_id', 'integration_provider_id', 'name']);
