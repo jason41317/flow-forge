@@ -18,7 +18,9 @@ WORKDIR /var/www
 COPY . .
 
 # Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+RUN php artisan package:discover --ansi
 
 # Permissions (Laravel needs this)
 RUN chmod -R 775 storage bootstrap/cache
