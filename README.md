@@ -1,58 +1,179 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Flowforge
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel 13 lead management and integration platform with tenant-aware API access, Facebook lead import hooks, and dynamic lead/status management.
 
-## About Laravel
+## Project Summary
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This project is built on Laravel and provides:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Multi-tenant lead and lead-status management.
+- API authentication using Laravel Sanctum.
+- Facebook integration with OAuth connect and webhook lead import.
+- Modular business logic via actions, DTOs, filters, services, and event listeners.
+- Database-backed sessions, cache, queues, and audit logs.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Key Features
 
-## Learning Laravel
+- Tenant isolation via `tenant_id`, `TenantManager`, and global model scopes.
+- Lead CRUD with UTM tracking, custom fields, source/type metadata, and soft deletes.
+- Lead status lifecycle management with `is_default` and `is_closed` flags.
+- Facebook integration support through `Integration` records and OAuth callbacks.
+- Event-driven lead processing: created leads trigger webhooks, integrations, logging, and notifications.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Requirements
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP ^8.3
+- Composer
+- Node.js / npm
+- SQLite (default), MySQL, or another supported database
+- Laravel dependencies from `composer.json`
+- Frontend tooling via `vite` and `tailwindcss`
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Setup
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install
+npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+If you use the included composer `setup` script:
 
-## Contributing
+```bash
+composer setup
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Environment Variables
 
-## Code of Conduct
+Important `.env` values:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- `DB_CONNECTION` (default: sqlite)
+- `SESSION_DRIVER=database`
+- `QUEUE_CONNECTION=database`
+- `FACEBOOK_APP_ID`
+- `FACEBOOK_APP_SECRET`
+- `FACEBOOK_REDIRECT_URI`
+- `FACEBOOK_VERIFY_TOKEN`
 
-## Security Vulnerabilities
+## Running Locally
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Start the app with:
 
-## License
+```bash
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+For local development with assets and background workers:
+
+```bash
+composer dev
+```
+
+This runs:
+
+- `php artisan serve`
+- `php artisan queue:listen`
+- `php artisan pail` (log tailing)
+- `npm run dev`
+
+## API Endpoints
+
+### Unauthenticated API
+
+- `POST /api/v1/register` — register a new tenant user
+- `POST /api/v1/login` — authenticate and return an API response
+- `POST /api/v1/webhooks/facebook/lead` — receive Facebook lead webhook payloads
+- `GET /api/v1/integrations/facebook/connect` — redirect to Facebook OAuth
+- `GET /api/v1/integrations/facebook/callback` — handle Facebook OAuth callback
+
+### Authenticated, Tenant-Aware API
+
+These routes require `auth:sanctum` and tenant context:
+
+- `GET /api/v1/me` — current authenticated user
+
+#### Leads
+- `GET /api/v1/leads`
+- `POST /api/v1/leads`
+- `GET /api/v1/leads/{lead}`
+- `PUT /api/v1/leads/{lead}`
+
+#### Lead Statuses
+- `GET /api/v1/lead-statuses`
+- `POST /api/v1/lead-statuses`
+- `GET /api/v1/lead-statuses/{id}`
+- `PUT /api/v1/lead-statuses/{id}`
+- `DELETE /api/v1/lead-statuses/{id}`
+
+## Database Schema Overview
+
+The core domain tables are:
+
+- `tenants`
+- `users`
+- `leads`
+- `lead_statuses`
+- `integration_providers`
+- `integrations`
+- `integration_logs`
+- `audit_logs`
+- `lead_fields`
+- `lead_field_values`
+
+### Lead model highlights
+
+- `tenant_id`
+- `first_name`, `last_name`
+- `email`, `phone`
+- `source`, `type`
+- `lead_status_id`
+- UTM fields
+- Soft deletes
+
+### Integration model highlights
+
+- `tenant_id`
+- `integration_provider_id`
+- `name`
+- `config` JSON for provider-specific settings
+- `enabled`
+
+## Architecture Notes
+
+- Controllers delegate to actions and DTOs for business logic.
+- Policies and gates authorize lead and lead status operations.
+- `BelongsToTenant` trait and `TenantScope` enforce tenant isolation on models.
+- `AppServiceProvider` registers event listeners for lead creation and update events.
+- `ApiResponse` centralizes JSON success/error response structure.
+
+## Testing
+
+Run tests with:
+
+```bash
+composer test
+```
+
+The suite uses Pest and includes tenant isolation tests.
+
+## Notes
+
+- `routes/web.php` currently serves the default welcome landing page.
+- Facebook integration requires valid app credentials and the callback URL to match `FACEBOOK_REDIRECT_URI`.
+- The project is primarily API-driven; UI assets are supported through Vite.
+
+## Useful Commands
+
+- `composer install`
+- `composer test`
+- `php artisan migrate`
+- `php artisan queue:listen`
+- `npm run dev`
+- `npm run build`
+
+---
+
+Feel free to ask for a second README version with example request payloads or API usage examples.
