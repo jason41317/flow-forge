@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Integration extends Model
 {
@@ -19,14 +21,21 @@ class Integration extends Model
         'enabled' => 'boolean',
     ];
 
-    public function provider()
+    public function provider() : BelongsTo
     {
-        return $this->belongsTo(IntegrationProvider::class);
+        return $this->belongsTo(IntegrationProvider::class, 'integration_provider_id');
     }
 
-    public function tenant()
+    public function tenant() : BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function facebookForms() : HasMany
+    {
+        return $this->hasMany(
+            FacebookForm::class
+        );
     }
 
     public function scopeProviderFilter(

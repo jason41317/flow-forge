@@ -34,13 +34,24 @@ class FacebookWebhookController extends Controller
                     'value.leadgen_id'
                 );
 
+                $pageId = data_get(
+                    $change,
+                    'value.page_id'
+                );
+
+                $formId = data_get(
+                    $change,
+                    'value.form_id'
+                );
+
                 if (! $leadgenId) {
                     continue;
                 }
 
                 ImportFacebookLeadJob::dispatch(
                     $leadgenId,
-                    $entry['id']
+                    $pageId,
+                    $formId
                 );
             }
         }

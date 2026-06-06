@@ -5,11 +5,12 @@ namespace App\Actions\Facebook;
 use App\Models\Integration;
 use App\Models\IntegrationProvider;
 use Illuminate\Support\Facades\Http;
+use App\Services\Integrations\Facebook\FacebookFormSyncService;
 
 class SyncFacebookPagesAction
 {
     public static function run(
-        int $tenantId,
+        // int $tenantId,
         string $accessToken
     ): void {
 
@@ -27,9 +28,9 @@ class SyncFacebookPagesAction
 
         foreach ($response->json('data', []) as $page) {
 
-            Integration::updateOrCreate(
+            $integration = Integration::updateOrCreate(
                 [
-                    'tenant_id' => $tenantId,
+                    // 'tenant_id' => $tenantId,
                     'integration_provider_id' => $provider->id,
                     'name' => $page['name'],
                 ],
@@ -42,6 +43,9 @@ class SyncFacebookPagesAction
                     ],
                 ]
             );
+
+            $facebookFormSyncService = new FacebookFormSyncService;
+            $facebookFormSyncService->sync($integration);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services\Integrations\Facebook;
 
 use App\Actions\Facebook\SyncFacebookPagesAction;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class FacebookOAuthService
 {
@@ -23,11 +24,14 @@ class FacebookOAuthService
     }
 
     public function handleCallback(
-        int $tenantId,
+        // int $tenantId,
         string $code
     ): void {
 
-        $response = Http::get(
+        $response = Http::withOptions([
+            'verify' => false, // Disable SSL verification
+        ])
+        ->get(
             'https://graph.facebook.com/v20.0/oauth/access_token',
             [
                 'client_id' => config('services.facebook.app_id'),
@@ -37,10 +41,12 @@ class FacebookOAuthService
             ]
         );
 
+        Log::info('Facebook OAuth response', ['response' => $response->body()]);
+
         $token = $response->json('access_token');
 
         SyncFacebookPagesAction::run(
-            tenantId: $tenantId,
+            // tenantId: $tenantId,
             accessToken: $token
         );
     }

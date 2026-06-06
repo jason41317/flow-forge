@@ -68,9 +68,11 @@ class LeadStatusController extends Controller
         $leadStatus = LeadStatus::findOrFail($id);
         Gate::authorize('view', $leadStatus);
 
-        return response()->json([
-            'data' => $leadStatus,
-        ]);
+        return ApiResponse::success(
+            new LeadStatusResource($leadStatus),
+            'Lead status fetched',
+            200
+        );
     }
 
     /**

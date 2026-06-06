@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant' => IdentifyTenant::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'api/v1/login',
+        ]);
+
         $middleware->statefulApi();
 
     })

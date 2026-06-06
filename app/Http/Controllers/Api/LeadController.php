@@ -105,8 +105,8 @@ class LeadController extends Controller
     {
         Gate::authorize('view', $lead);
 
-        return response()->json([
-            'data' => $lead,
+        return ApiResponse::success([
+            new LeadResource($lead)
         ]);
     }
 }

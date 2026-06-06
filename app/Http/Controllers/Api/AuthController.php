@@ -9,6 +9,8 @@ use App\DTOs\RegisterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
+use App\Support\Api\ApiResponse;
 
 class AuthController extends Controller
 {
@@ -37,5 +39,12 @@ class AuthController extends Controller
         );
 
         return LoginAction::run($dto);
+    }
+
+    public function me()
+    {
+        return  ApiResponse::success([
+            new UserResource(request()->user())
+        ]);
     }
 }

@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FacebookFormController;
 use App\Http\Controllers\Api\FacebookIntegrationController;
+use App\Http\Controllers\Api\IntegrationController;
+use App\Http\Controllers\Api\IntegrationProviderController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\LeadStatusController;
 use App\Http\Controllers\Webhooks\FacebookWebhookController;
@@ -22,14 +25,15 @@ Route::prefix('v1')
             [FacebookWebhookController::class, 'handle']
         );
 
-        Route::prefix('integrations/facebook')
+
+        Route::middleware(['auth:sanctum', 'tenant'])->group(function () {
+            Route::get('/me', [AuthController::class, 'me']);
+
+            Route::prefix('integrations/facebook')
             ->group(function () {
                 Route::get('/connect', [FacebookIntegrationController::class, 'redirect']);
                 Route::get('/callback', [FacebookIntegrationController::class, 'callback']);
             });
-
-        Route::middleware(['auth:sanctum', 'tenant'])->group(function () {
-            Route::get('/me', fn () => request()->user());
 
             // Leads
             Route::get('/leads', [LeadController::class, 'index']);
@@ -43,5 +47,14 @@ Route::prefix('v1')
             Route::put('/lead-statuses/{id}', [LeadStatusController::class, 'update']);
             Route::get('/lead-statuses/{id}', [LeadStatusController::class, 'show']);
             Route::delete('/lead-statuses/{id}', [LeadStatusController::class, 'destroy']);
+
+            // Facebook
+            Route::get('/integration-providers', [IntegrationProviderController::class, 'index']);
+            Route::get('/integrations', [IntegrationController::class, 'index']);
+            Route::get('/facebook/forms', [FacebookFormController::class, 'index']);
+            Route::get('/facebook/forms/{id}', [FacebookFormController::class, 'show']);
+            Route::get('/facebook/forms/{id}/mappings', [FacebookFormController::class, 'mappings']);
+            Route::put('/facebook/forms/{id}/mappings', [FacebookFormController::class, 'updateMappings']);
+            Route::post('/facebook/integrations/{integrationId}/sync', [FacebookFormController::class, 'sync']);
         });
     });
